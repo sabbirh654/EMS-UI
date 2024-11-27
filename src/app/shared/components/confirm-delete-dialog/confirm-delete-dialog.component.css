@@ -1,0 +1,21 @@
+/* Center-align the content */
+.mat-dialog-content {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Style the dialog actions */
+.mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    /* Align buttons to the right */
+    gap: 10px;
+    /* Add spacing between buttons */
+}
+
+/* Optional: Customize button styles further if needed */
+button {
+    text-transform: capitalize;
+    /* Prevent all-uppercase buttons */
+    padding: 5px 15px;
+}

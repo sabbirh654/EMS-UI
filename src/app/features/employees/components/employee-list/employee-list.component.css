@@ -1,0 +1,27 @@
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+}
+
+th.mat-header-cell,
+td.mat-cell {
+    text-align: left;
+    padding: 8px;
+}
+
+tr.mat-mdc-row:hover {
+    background-color: #D4BEE4;
+    cursor: pointer;
+}
+
+.mat-header-row:hover {
+    background-color: #e0e0e0;
+    /* Slightly darker gray for header */
+}
+
+button {
+    margin-right: 8px;
+}
