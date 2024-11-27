@@ -1,0 +1,51 @@
+/* Common */
+header {
+    width: 100%;
+    box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+header,
+nav,
+nav a {
+    height: 3rem;
+}
+
+header,
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Menu */
+nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin: 0 10px;
+    color: #1c1917;
+    position: relative;
+    cursor: pointer;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    bottom: -0.1rem;
+    left: 0;
+    height: 0.2rem;
+    width: 0;
+    border-radius: 0.2rem;
+    background: var(--secondary-color);
+    transition: 0.4s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+nav a.active-link::after {
+    width: 100%;
+}
