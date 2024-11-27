@@ -5,7 +5,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDi
 @Component({
   selector: 'app-confirm-delete-dialog',
   standalone: true,
-  imports: [MatButtonModule, MatDialogActions, MatDialogContent, MatDialogClose, MatDialogTitle],
+  imports: [MatButtonModule, MatDialogActions, MatDialogContent, MatDialogTitle],
   templateUrl: './confirm-delete-dialog.component.html',
   styleUrl: './confirm-delete-dialog.component.css'
 })

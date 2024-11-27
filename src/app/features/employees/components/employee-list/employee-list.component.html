@@ -1,5 +1,6 @@
+@if(!isEmployeeFormVisible) {
 <div class="table-container" style="margin: 20px;">
-    <table mat-table [dataSource]="employeeData" class="mat-elevation-z8">
+    <table mat-table [dataSource]=" employeeData" class="mat-elevation-z8">
 
         <!-- ID Column -->
         <ng-container matColumnDef="id">
@@ -62,3 +63,11 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
+}
+
+@if(isEmployeeFormVisible){
+<div>
+    <app-employee-form [employeeData]="selectedEmployeeData" mode="edit" (formCloseEvent)="OnEmployeeFormClosed()"
+        (successfulAddUpdateEmployeeEvent)="OnEmployeeAddUpdateOperationSuccess()"></app-employee-form>
+</div>
+}

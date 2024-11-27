@@ -1,1 +1,75 @@
-<p>employee-form works!</p>
+<mat-card>
+    <mat-card-title>{{ mode === 'add' ? 'Add Employee' : 'Edit Employee' }}</mat-card-title>
+
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+
+        @if(mode === 'edit') {
+        <!--Id-->
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>ID</mat-label>
+            <input matInput formControlName="id" />
+        </mat-form-field>
+        }
+
+        <!-- Name -->
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter name" />
+            <mat-error *ngIf="employeeForm.get('name')?.invalid">Name is required</mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="Enter email" />
+            <mat-error *ngIf="employeeForm.get('email')?.invalid">Valid email is required</mat-error>
+        </mat-form-field>
+
+        <!-- Phone -->
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" placeholder="Enter phone number" />
+            <mat-error *ngIf="employeeForm.get('phone')?.invalid">Phone number is required</mat-error>
+        </mat-form-field>
+
+        <!--Address-->
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address" placeholder="Enter address" />
+            <mat-error *ngIf="employeeForm.get('address')?.invalid">Address is required</mat-error>
+        </mat-form-field>
+
+        <!--DOB-->
+        <mat-form-field>
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Department Dropdown (Visible only in Add mode) -->
+        @if(mode === 'add') {
+        <div>
+            <mat-form-field appearance="fill" class="form-field">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="department">
+                    <mat-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Role Dropdown -->
+            <mat-form-field appearance="fill" class="form-field">
+                <mat-label>Role</mat-label>
+                <mat-select formControlName="role">
+                    <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        }
+        <div class="button-group">
+            <button mat-raised-button color="primary" type="submit">Submit</button>
+            <button mat-raised-button color="warn" type="button" (click)="onClose()">Close</button>
+        </div>
+    </form>
+</mat-card>

@@ -7,17 +7,20 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'
 })
 export class EmployeeListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'email', 'phone', 'birthDate', 'address', 'department', 'designation', 'actions'];
   employeeData: EmployeeDetails[] = [];
+  isEmployeeFormVisible: boolean = false;
+  selectedEmployeeData: EmployeeDetails | null = null;
 
   constructor(private employeeService: EmployeeService,
     private snackBar: MatSnackBar,
@@ -58,7 +61,17 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  onEdit(rowData: any) {
-    console.log(rowData);
+  onEdit(rowData: EmployeeDetails) {
+    this.isEmployeeFormVisible = true;
+    this.selectedEmployeeData = rowData;
+  }
+
+  OnEmployeeFormClosed() {
+    this.isEmployeeFormVisible = false;
+  }
+
+  OnEmployeeAddUpdateOperationSuccess() {
+    this.isEmployeeFormVisible = false;
+    this.loadEmployeeData();
   }
 }
