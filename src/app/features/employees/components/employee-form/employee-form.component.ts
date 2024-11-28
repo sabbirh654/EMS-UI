@@ -8,9 +8,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { NgFor, NgIf } from '@angular/common';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { EmployeeUpdateMapper } from '../../employee.mapper';
+import { EmployeeAddMapper, EmployeeUpdateMapper } from '../../employee.mapper';
 import { EmployeeService } from '../../services/employee.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { DesignationService } from '../../../designations/services/designation.service';
+import { Designation } from '../../../designations/models/designation.model';
+import { DepartmentService } from '../../../departments/services/department.service';
+import { Department } from '../../../departments/models/department.model';
 
 @Component({
   selector: 'app-employee-form',
@@ -38,15 +42,21 @@ export class EmployeeFormComponent implements OnInit {
 
   employeeForm!: FormGroup;
 
-  departments = ['HR', 'IT', 'Finance'];
-  roles = ['Manager', 'Developer', 'Analyst'];
+  departments: Department[] | null = null;
+  designations: Designation[] | null = null;
 
   constructor(private employeeService: EmployeeService,
+    private designationService: DesignationService,
+    private departmentService: DepartmentService,
     private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
+    //Get designations from db
+    this.GetDesignations();
+    this.GetDepartments();
     this.initializeForm();
+
     if (this.mode === 'edit' && this.employeeData) {
       this.populateForm();
     }
@@ -61,7 +71,7 @@ export class EmployeeFormComponent implements OnInit {
       address: new FormControl('', [Validators.required]),
       date: new FormControl('', [Validators.required]),
       department: new FormControl(''),
-      role: new FormControl(''),
+      designation: new FormControl(''),
     });
   }
 
@@ -75,13 +85,12 @@ export class EmployeeFormComponent implements OnInit {
       date: this.employeeData.birthDate
     });
 
-    var x = this.employeeForm.get('id')?.value;
+    this.employeeForm.get('id')?.disable();
   }
 
   onSubmit(): void {
     if (this.employeeForm.valid) {
       if (this.mode === 'edit') {
-        var x = this.employeeForm.value.id;
         let employeeUpdateDto = EmployeeUpdateMapper(this.employeeForm.value);
         this.employeeService.updateEmployee(this.employeeForm.get('id')?.value, employeeUpdateDto).subscribe({
           next: () => {
@@ -94,6 +103,19 @@ export class EmployeeFormComponent implements OnInit {
           }
         });
       }
+      else {
+        let employeeAddDto = EmployeeAddMapper(this.employeeForm.value);
+        this.employeeService.addEmployee(employeeAddDto).subscribe({
+          next: () => {
+            this.snackBar.open('Employee added successfully', 'Close', { duration: 2000 });
+            this.successfulAddUpdateEmployeeEvent.emit();
+          },
+          error: (err) => {
+            console.error('Error adding employee', err);
+            this.snackBar.open('Failed to add employee', 'Close', { duration: 2000 });
+          }
+        });
+      }
       console.log('Form submitted:', this.employeeForm.value);
     }
   }
@@ -101,5 +123,27 @@ export class EmployeeFormComponent implements OnInit {
   onClose() {
     this.employeeForm.reset();
     this.formCloseEvent.emit();
+  }
+
+  private GetDesignations() {
+    this.designationService.getDesignations().subscribe({
+      next: (data) => {
+        this.designations = data.result || [];
+      },
+      error: (err) => {
+        console.error('Error fetching designation data', err);
+      },
+    });
+  }
+
+  private GetDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => {
+        this.departments = data.result || [];
+      },
+      error: (err) => {
+        console.error('Error fetching department data', err);
+      },
+    });
   }
 }

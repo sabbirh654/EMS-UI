@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/models/response.model';
-import { EmployeeDetails, EmployeeUpdateDto } from '../models/employee.model';
+import { EmployeeAddDto, EmployeeDetails, EmployeeUpdateDto } from '../models/employee.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +23,9 @@ export class EmployeeService {
 
   updateEmployee(id: number, employeeUpdateDto: EmployeeUpdateDto): Observable<ApiResponse<number>> {
     return this.http.put<ApiResponse<number>>(`${this.apiUrl}/${id}`, employeeUpdateDto);
+  }
+
+  addEmployee(employeeAddDto: EmployeeAddDto): Observable<ApiResponse<number>> {
+    return this.http.post<ApiResponse<number>>(this.apiUrl, employeeAddDto);
   }
 }

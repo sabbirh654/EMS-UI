@@ -50,22 +50,21 @@
 
         <!-- Department Dropdown (Visible only in Add mode) -->
         @if(mode === 'add') {
-        <div>
-            <mat-form-field appearance="fill" class="form-field">
-                <mat-label>Department</mat-label>
-                <mat-select formControlName="department">
-                    <mat-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="department">
+                <mat-option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-            <!-- Role Dropdown -->
-            <mat-form-field appearance="fill" class="form-field">
-                <mat-label>Role</mat-label>
-                <mat-select formControlName="role">
-                    <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <!-- Role Dropdown -->
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Designation</mat-label>
+            <mat-select formControlName="designation">
+                <mat-option *ngFor="let designation of designations" [value]="designation.id">{{ designation.name
+                    }}</mat-option>
+            </mat-select>
+        </mat-form-field>
         }
         <div class="button-group">
             <button mat-raised-button color="primary" type="submit">Submit</button>

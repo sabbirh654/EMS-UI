@@ -20,6 +20,7 @@ export class EmployeeListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'email', 'phone', 'birthDate', 'address', 'department', 'designation', 'actions'];
   employeeData: EmployeeDetails[] = [];
   isEmployeeFormVisible: boolean = false;
+  isEditButtonClicked: boolean = false;
   selectedEmployeeData: EmployeeDetails | null = null;
 
   constructor(private employeeService: EmployeeService,
@@ -63,7 +64,13 @@ export class EmployeeListComponent implements OnInit {
 
   onEdit(rowData: EmployeeDetails) {
     this.isEmployeeFormVisible = true;
+    this.isEditButtonClicked = true;
     this.selectedEmployeeData = rowData;
+  }
+
+  onAdd() {
+    this.isEmployeeFormVisible = true;
+    this.isEditButtonClicked = false;
   }
 
   OnEmployeeFormClosed() {

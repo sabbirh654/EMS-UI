@@ -16,3 +16,13 @@ export interface EmployeeUpdateDto {
     address: string;
     birthDate: string;
 }
+
+export interface EmployeeAddDto {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    birthDate: string;
+    departmentId: number;
+    designationId: number;
+}
