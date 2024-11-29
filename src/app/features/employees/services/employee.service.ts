@@ -17,6 +17,11 @@ export class EmployeeService {
     return this.http.get<ApiResponse<EmployeeDetails[]>>(this.apiUrl);
   }
 
+  getEmployeeById(id: number): Observable<ApiResponse<EmployeeDetails>> {
+    var data = this.http.get<ApiResponse<EmployeeDetails>>(`${this.apiUrl}/${id}`);
+    return data;
+  }
+
   deleteEmployee(id: number): Observable<ApiResponse<number>> {
     return this.http.delete<ApiResponse<number>>(`${this.apiUrl}/${id}`);
   }

@@ -7,10 +7,12 @@ import { DepartmentFormComponent } from '../department-form/department-form.comp
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-department-list',
-  imports: [MatButtonModule, MatTableModule, DepartmentFormComponent, MatSnackBarModule],
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatTableModule, DepartmentFormComponent, MatSnackBarModule],
   templateUrl: './department-list.component.html',
   styleUrl: './department-list.component.css'
 })

@@ -8,11 +8,13 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
+import { AttendanceFormComponent } from '../../../attendances/components/attendance-form/attendance-form.component';
+import { AttendanceListComponent } from '../../../attendances/components/attendance-list/attendance-list.component';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent, AttendanceListComponent],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'
 })
@@ -21,6 +23,7 @@ export class EmployeeListComponent implements OnInit {
   employeeData: EmployeeDetails[] = [];
   isEmployeeFormVisible: boolean = false;
   isEditButtonClicked: boolean = false;
+  isAttendanceFormVisible: boolean = false;
   selectedEmployeeData: EmployeeDetails | null = null;
 
   constructor(private employeeService: EmployeeService,
@@ -80,5 +83,9 @@ export class EmployeeListComponent implements OnInit {
   OnEmployeeAddUpdateOperationSuccess() {
     this.isEmployeeFormVisible = false;
     this.loadEmployeeData();
+  }
+
+  onAddAttendance(id: number) {
+    this.isAttendanceFormVisible = true;
   }
 }

@@ -1,0 +1,34 @@
+<h2 mat-dialog-title class="dialog-title">Employee Details</h2>
+<div mat-dialog-content class="dialog-content">
+    <div class="detail">
+        <strong>Name:</strong>
+        <span>{{ data.name }}</span>
+    </div>
+    <div class="detail">
+        <strong>Email:</strong>
+        <span>{{ data.email }}</span>
+    </div>
+    <div class="detail">
+        <strong>Phone:</strong>
+        <span>{{ data.phoneNumber }}</span>
+    </div>
+    <div class="detail">
+        <strong>Address:</strong>
+        <span>{{ data.address }}</span>
+    </div>
+    <div class="detail">
+        <strong>Birth Date:</strong>
+        <span>{{ data.birthDate | date: 'yyyy-MM-dd' }}</span>
+    </div>
+    <div class="detail">
+        <strong>Department:</strong>
+        <span>{{ data.department }}</span>
+    </div>
+    <div class="detail">
+        <strong>Designation:</strong>
+        <span>{{ data.designation }}</span>
+    </div>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close color="primary">Close</button>
+</div>
