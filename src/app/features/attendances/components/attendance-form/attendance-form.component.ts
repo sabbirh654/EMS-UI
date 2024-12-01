@@ -70,9 +70,14 @@ export class AttendanceFormComponent implements OnInit {
       if (this.mode === 'edit') {
         let dto = AttendanceUpdateMapper(this.attendanceForm.value);
         this.attendanceService.updateAttendance(this.selectedAttendanceData?.id!, dto).subscribe({
-          next: () => {
-            this.snackBar.open('Attendance updated successfully', 'Close', { duration: 2000 });
-            this.successfulAddUpdateAttendanceEvent.emit();
+          next: (data) => {
+            if (data.success == true) {
+              this.snackBar.open('Attendance updated successfully', 'Close', { duration: 2000 });
+              this.successfulAddUpdateAttendanceEvent.emit();
+            }
+            else {
+              this.snackBar.open(data.message ?? '', 'Close', { duration: 4000 });
+            }
           },
           error: (err) => {
             console.error('Error updating attendance', err);
@@ -83,9 +88,14 @@ export class AttendanceFormComponent implements OnInit {
       else {
         let dto = AttendanceAddMapper(this.attendanceForm.value);
         this.attendanceService.addAttendance(dto).subscribe({
-          next: () => {
-            this.snackBar.open('Attendance added successfully', 'Close', { duration: 2000 });
-            this.successfulAddUpdateAttendanceEvent.emit();
+          next: (data) => {
+            if (data.success == true) {
+              this.snackBar.open('Attendance added successfully', 'Close', { duration: 2000 });
+              this.successfulAddUpdateAttendanceEvent.emit();
+            }
+            else {
+              this.snackBar.open(data.message ?? '', 'Close', { duration: 4000 });
+            }
           },
           error: (err) => {
             console.error('Error adding adding', err);
@@ -108,7 +118,7 @@ export class AttendanceFormComponent implements OnInit {
     const checkOutTime = control.root.get('checkOut')?.value;
 
     if (checkInTime && checkOutTime) {
-      if (checkOutTime < checkInTime || checkInTime > checkOutTime) {
+      if (checkOutTime < checkInTime) {
         return { checkOutBeforeCheckIn: true };
       }
     }
