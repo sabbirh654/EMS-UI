@@ -13,22 +13,29 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AttendanceFormComponent } from '../attendance-form/attendance-form.component';
+import { TimeAmPmPipe } from '../../../../shared/pipes/date.pipe';
 
 @Component({
   selector: 'app-attendance-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, EmployeeDetailsComponent],
-  providers: [provideNativeDateAdapter(), DatePipe],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, AttendanceFormComponent, TimeAmPmPipe],
+  providers: [provideNativeDateAdapter(), DatePipe, TimeAmPmPipe],
   templateUrl: './attendance-list.component.html',
   styleUrl: './attendance-list.component.css'
 })
 export class AttendanceListComponent implements OnInit {
   attendances: Attendance[] = [];
+  isAttendanceFormVisible: boolean = false;
+  selectedAttendanceData: Attendance | null = null;
   selectedEmployeeData: EmployeeDetails | null = null;
   displayedColumns: string[] = ['id', 'employee-id', 'date', 'check-in-time', 'check-out-time', 'actions'];
   filterForm!: FormGroup;
   filterDate: string | null = null;
   employeeId: number | null = null;
+  selectedEmployeeId: number | null = null;
 
   attendanceFilter: AttendanceFilter = {
     employeeId: this.employeeId,
@@ -38,7 +45,8 @@ export class AttendanceListComponent implements OnInit {
   constructor(private attendanceService: AttendanceService,
     private employeeService: EmployeeService,
     private dialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -57,9 +65,28 @@ export class AttendanceListComponent implements OnInit {
   }
 
   onDelete(id: number) {
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.attendanceService.deleteAttendance(id).subscribe({
+          next: () => {
+            this.snackBar.open('Attendance deleted successfully', 'Close', { duration: 2000 });
+            this.loadData();  // Refresh data after deletion
+          },
+          error: (err) => {
+            console.error('Error deleting attendance', err);
+            this.snackBar.open('Failed to delete attendance', 'Close', { duration: 2000 });
+          }
+        });
+      }
+    });
   }
 
-  onEdit(rowDate: Attendance) {
+  onEdit(rowData: Attendance) {
+    this.isAttendanceFormVisible = true;
+    this.selectedAttendanceData = rowData;
+    this.selectedEmployeeId = rowData.employeeId;
   }
 
   onSearch() {
@@ -81,6 +108,14 @@ export class AttendanceListComponent implements OnInit {
 
   onEmployeeIdChange($event: any) {
     this.employeeId = $event.data;
+  }
+
+  OnAttendanceAddUpdateOperationSuccess() {
+    this.isAttendanceFormVisible = false;
+    this.loadData();
+  }
+  OnAttendanceFormClosed() {
+    this.isAttendanceFormVisible = false;
   }
 
   openEmployeeDetails(id: number) {

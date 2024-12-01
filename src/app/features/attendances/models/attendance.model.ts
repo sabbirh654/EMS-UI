@@ -1,9 +1,9 @@
 export interface Attendance {
     id: number;
     employeeId: number;
-    date: Date;
-    checkInTime: Date;
-    checkOutTime: Date;
+    date: string;
+    checkInTime: string;
+    checkOutTime: string;
 }
 
 export interface AttendanceAddDto {

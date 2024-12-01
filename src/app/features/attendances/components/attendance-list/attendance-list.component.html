@@ -1,3 +1,9 @@
+@if(isAttendanceFormVisible) {
+<app-attendance-form mode="edit" [selectedEmployeeId]="selectedEmployeeId"
+    [selectedAttendanceData]="selectedAttendanceData" (formCloseEvent)="OnAttendanceFormClosed()"
+    (successfulAddUpdateAttendanceEvent)="OnAttendanceAddUpdateOperationSuccess()"></app-attendance-form>
+}
+@else {
 <div class="header">
     <h2>Attendance List</h2>
     <div class="search">
@@ -48,7 +54,7 @@
         <ng-container matColumnDef="check-in-time">
             <th mat-header-cell *matHeaderCellDef> Check In </th>
             <td mat-cell *matCellDef="let element">
-                {{ element.checkInTime }}
+                {{ element.checkInTime | timeAmPm }}
             </td>
         </ng-container>
 
@@ -56,7 +62,7 @@
         <ng-container matColumnDef="check-out-time">
             <th mat-header-cell *matHeaderCellDef> Check Out </th>
             <td mat-cell *matCellDef="let element">
-                {{ element.checkOutTime }}
+                {{ element.checkOutTime | timeAmPm }}
             </td>
         </ng-container>
 
@@ -72,3 +78,4 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
+}

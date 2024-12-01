@@ -14,7 +14,8 @@
 }
 }
 @else if (isAttendanceFormVisible) {
-<app-attendance-form></app-attendance-form>
+<app-attendance-form mode="add" [selectedEmployeeId]="selectedEmployeeId" (formCloseEvent)="OnAttendanceFormClosed()"
+    (successfulAddUpdateAttendanceEvent)="OnAttendanceAddUpdateOperationSuccess()"></app-attendance-form>
 }
 @else() {
 <div class="header">

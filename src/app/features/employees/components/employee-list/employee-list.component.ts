@@ -14,7 +14,7 @@ import { AttendanceListComponent } from '../../../attendances/components/attenda
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent, AttendanceListComponent],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'
 })
@@ -25,6 +25,7 @@ export class EmployeeListComponent implements OnInit {
   isEditButtonClicked: boolean = false;
   isAttendanceFormVisible: boolean = false;
   selectedEmployeeData: EmployeeDetails | null = null;
+  selectedEmployeeId: number | null = null;
 
   constructor(private employeeService: EmployeeService,
     private snackBar: MatSnackBar,
@@ -87,5 +88,13 @@ export class EmployeeListComponent implements OnInit {
 
   onAddAttendance(id: number) {
     this.isAttendanceFormVisible = true;
+    this.selectedEmployeeId = id;
+  }
+
+  OnAttendanceAddUpdateOperationSuccess() {
+    this.isAttendanceFormVisible = false;
+  }
+  OnAttendanceFormClosed() {
+    this.isAttendanceFormVisible = false;
   }
 }

@@ -1,1 +1,43 @@
-<p>attendance-form works!</p>
+<mat-card>
+    <mat-card-title>{{ mode === 'add' ? 'Add Attendance' : 'Edit Attendance' }}</mat-card-title>
+    <form [formGroup]="attendanceForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Employee ID</mat-label>
+            <input matInput formControlName="employeeId" readonly />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="date" formControlName="date" />
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date color="accent"></mat-datepicker>
+            <mat-error *ngIf="attendanceForm.get('date')?.invalid">Date is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Check-in Time</mat-label>
+            <input matInput [matTimepicker]="checkInTime" formControlName="checkIn" readonly>
+            <mat-timepicker-toggle matIconSuffix [for]="checkInTime" />
+            <mat-timepicker interval="10m" #checkInTime />
+            <mat-error *ngIf="attendanceForm.get('checkIn')?.invalid">CheckIn time is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Check-out Time</mat-label>
+            <input matInput [matTimepicker]="checkOutTime" formControlName="checkOut" readonly>
+            <mat-timepicker-toggle matIconSuffix [for]="checkOutTime" />
+            <mat-timepicker interval="10m" #checkOutTime />
+            <mat-error *ngIf="attendanceForm.get('checkOut')?.hasError('required')">CheckOut time is
+                required</mat-error>
+            <mat-error *ngIf="attendanceForm.get('checkOut')?.hasError('checkOutBeforeCheckIn')">
+                Check-Out Time must be after Check-In Time.
+            </mat-error>
+        </mat-form-field>
+
+        <div class="button-group">
+            <button mat-raised-button color="primary" type="submit">Submit</button>
+            <button mat-raised-button color="warn" type="button" (click)="onClose()">Close</button>
+        </div>
+    </form>
+</mat-card>
