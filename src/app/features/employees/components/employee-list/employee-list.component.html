@@ -77,9 +77,25 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Actions </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="primary" (click)="onAddAttendance(element.id)">Add Attendance</button>
-                <button mat-raised-button color="primary" (click)="onEdit(element)">Edit</button>
-                <button mat-raised-button color="warn" (click)="onDelete(element.id)">Delete</button>
+                <mat-select panelWidth="300px" placeholder="Actions">
+                    <mat-option>
+                        <button mat-raised-button color="primary" (click)="onEdit(element)">Edit Employee</button>
+                    </mat-option>
+                    <mat-option>
+                        <button mat-raised-button color="warn" (click)="onDelete(element.id)">Delete Employee</button>
+                    </mat-option>
+                    <mat-option>
+                        <button mat-raised-button color="primary" (click)="onAddAttendance(element.id)">Add
+                            Attendance</button>
+                    </mat-option>
+                    <mat-option>
+                        <button mat-raised-button color="primary" (click)="onViewAttendance(element.id)">View
+                            Attendance</button>
+                    </mat-option>
+                    <mat-option>
+                        <button mat-raised-button color="primary" (click)="onDelete(element.id)">View Logs</button>
+                    </mat-option>
+                </mat-select>
             </td>
         </ng-container>
 

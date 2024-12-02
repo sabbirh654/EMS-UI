@@ -10,11 +10,17 @@ import { ConfirmDeleteDialogComponent } from '../../../../shared/components/conf
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { AttendanceFormComponent } from '../../../attendances/components/attendance-form/attendance-form.component';
 import { AttendanceListComponent } from '../../../attendances/components/attendance-list/attendance-list.component';
+import { MatSelectModule } from '@angular/material/select';
+import { AttendanceService } from '../../../attendances/services/attendance.service';
+import { AttendanceDetailsComponent } from '../../../attendances/components/attendance-details/attendance-details.component';
+import { AttendanceDetails } from '../../../attendances/models/attendance.model';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent,
+    MatSelectModule
+  ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'
 })
@@ -26,8 +32,10 @@ export class EmployeeListComponent implements OnInit {
   isAttendanceFormVisible: boolean = false;
   selectedEmployeeData: EmployeeDetails | null = null;
   selectedEmployeeId: number | null = null;
+  selectedEmployeeAttendance: AttendanceDetails[] | null = null;
 
   constructor(private employeeService: EmployeeService,
+    private attendanceService: AttendanceService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) { }
@@ -96,5 +104,21 @@ export class EmployeeListComponent implements OnInit {
   }
   OnAttendanceFormClosed() {
     this.isAttendanceFormVisible = false;
+  }
+
+  onViewAttendance(id: number) {
+    this.attendanceService.getEmployeeAttendance(id).subscribe({
+      next: (d) => {
+        this.selectedEmployeeAttendance = d.result || null;
+        this.dialog.open(AttendanceDetailsComponent, {
+          width: '600px',
+
+          data: this.selectedEmployeeAttendance,
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching employee data', err);
+      },
+    });
   }
 }

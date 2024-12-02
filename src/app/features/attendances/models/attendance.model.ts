@@ -6,6 +6,12 @@ export interface Attendance {
     checkOutTime: string;
 }
 
+export interface AttendanceDetails {
+    attendanceDate: string;
+    earliestCheckIn: string;
+    latestCheckOut: string;
+}
+
 export interface AttendanceAddDto {
     employeeId: number;
     date: string;

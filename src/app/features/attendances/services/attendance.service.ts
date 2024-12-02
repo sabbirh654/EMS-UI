@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/models/response.model';
-import { Attendance, AttendanceAddDto, AttendanceFilter, AttendanceUpdateDto } from '../models/attendance.model';
+import { Attendance, AttendanceAddDto, AttendanceDetails, AttendanceFilter, AttendanceUpdateDto } from '../models/attendance.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,10 @@ export class AttendanceService {
     });
 
     return this.http.get<ApiResponse<Attendance[]>>(this.apiUrl, { params });
+  }
+
+  getEmployeeAttendance(id: number) {
+    return this.http.get<ApiResponse<AttendanceDetails[]>>(`${this.apiUrl}/${id}`);
   }
 
   deleteAttendance(id: number): Observable<ApiResponse<number>> {
