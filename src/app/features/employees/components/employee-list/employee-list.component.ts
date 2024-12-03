@@ -14,6 +14,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { AttendanceService } from '../../../attendances/services/attendance.service';
 import { AttendanceDetailsComponent } from '../../../attendances/components/attendance-details/attendance-details.component';
 import { AttendanceDetails } from '../../../attendances/models/attendance.model';
+import { OperationLogService } from '../../../logs/services/operation-log.service';
+import { LogFilter, OperationLog } from '../../../logs/models/log.model';
+import { EntityName } from '../../../../shared/Enums/enums';
+import { LogDetailsComponent } from '../../../logs/components/log-details/log-details.component';
 
 @Component({
   selector: 'app-employee-list',
@@ -25,6 +29,7 @@ import { AttendanceDetails } from '../../../attendances/models/attendance.model'
   styleUrl: './employee-list.component.css'
 })
 export class EmployeeListComponent implements OnInit {
+
   displayedColumns: string[] = ['id', 'name', 'email', 'phone', 'birthDate', 'address', 'department', 'designation', 'actions'];
   employeeData: EmployeeDetails[] = [];
   isEmployeeFormVisible: boolean = false;
@@ -33,11 +38,13 @@ export class EmployeeListComponent implements OnInit {
   selectedEmployeeData: EmployeeDetails | null = null;
   selectedEmployeeId: number | null = null;
   selectedEmployeeAttendance: AttendanceDetails[] | null = null;
+  selectedEmployeeLogs: OperationLog[] | null = null;
 
   constructor(private employeeService: EmployeeService,
     private attendanceService: AttendanceService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private logService: OperationLogService
   ) { }
 
   ngOnInit(): void {
@@ -118,6 +125,27 @@ export class EmployeeListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching employee data', err);
+      },
+    });
+  }
+
+  onViewLogs(id: number) {
+
+    var filter: LogFilter = {
+      id: id,
+      entityName: "Employee"
+    }
+    this.logService.getLogs(filter).subscribe({
+      next: (d) => {
+        this.selectedEmployeeLogs = d.result || null;
+        this.dialog.open(LogDetailsComponent, {
+          width: '600px',
+          data: this.selectedEmployeeLogs,
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching employee log data', err);
+        console.log(filter)
       },
     });
   }

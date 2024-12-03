@@ -107,7 +107,8 @@ export class AttendanceListComponent implements OnInit {
   }
 
   onEmployeeIdChange($event: any) {
-    this.employeeId = $event.data;
+    const inputElement = $event.target as HTMLInputElement;
+    this.employeeId = +inputElement.value;
   }
 
   OnAttendanceAddUpdateOperationSuccess() {
