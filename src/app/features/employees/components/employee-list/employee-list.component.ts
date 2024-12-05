@@ -18,6 +18,7 @@ import { OperationLogService } from '../../../logs/services/operation-log.servic
 import { LogFilter, OperationLog } from '../../../logs/models/log.model';
 import { EntityName } from '../../../../shared/Enums/enums';
 import { LogDetailsComponent } from '../../../logs/components/log-details/log-details.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-employee-list',
@@ -148,5 +149,59 @@ export class EmployeeListComponent implements OnInit {
         console.log(filter)
       },
     });
+  }
+
+  onDownloadAsCsv() {
+    console.log(this.employeeData)
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Address', 'DOB', 'Department', 'Designation'];
+
+    // Create the header row
+    const headerRow = headers.join(',');
+    const rows = this.employeeData.map(employee => `${employee.id},${employee.name},${employee.email},${employee.phoneNumber},${employee.address}, ${employee.birthDate}, ${employee.department},${employee.designation}`).join('\n');
+    const csvContent = headers + '\n' + rows;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'employees.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  onDownloadAsXls() {
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Address', 'DOB', 'Department', 'Designation'];
+
+    // Map the employee data into a 2D array
+    const excelData = this.employeeData.map(employee => [
+      employee.id,
+      employee.name || '',  // Replace null/undefined with an empty string
+      employee.email || '',
+      employee.phoneNumber || '',
+      employee.address || '',
+      employee.birthDate || '',
+      employee.department || '',
+      employee.designation || ''
+    ]);
+
+    const sheetData = [headers, ...excelData];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+    const columnWidths = headers.map((header, columnIndex) => {
+      const maxContentLength = Math.max(
+        header.length,
+        ...excelData.map(row => String(row[columnIndex]).length)
+      );
+      return { wch: maxContentLength + 2 }; // Add padding to the width
+    });
+
+    worksheet['!cols'] = columnWidths;
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Employees');
+    XLSX.writeFile(workbook, 'employees.xlsx');
   }
 }
