@@ -3,7 +3,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { EmployeeDetails } from '../../models/employee.model';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
@@ -26,6 +26,7 @@ import * as XLSX from 'xlsx';
   imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent,
     MatSelectModule
   ],
+  providers: [DatePipe],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'
 })
@@ -45,7 +46,8 @@ export class EmployeeListComponent implements OnInit {
     private attendanceService: AttendanceService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private logService: OperationLogService
+    private logService: OperationLogService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -183,7 +185,7 @@ export class EmployeeListComponent implements OnInit {
       employee.email || '',
       employee.phoneNumber || '',
       employee.address || '',
-      employee.birthDate || '',
+      this.datePipe.transform(employee.birthDate, 'yyyy-MM-dd') || '',
       employee.department || '',
       employee.designation || ''
     ]);
