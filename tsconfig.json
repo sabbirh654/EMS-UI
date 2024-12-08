@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
@@ -16,7 +17,15 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "paths": {
+      "@shared/*": ["src/app/shared/*"],
+      "@attendances/*": ["src/app/features/attendances/*"],
+      "@departments/*": ["src/app/features/departments/*"],
+      "@designations/*": ["src/app/features/designations/*"],
+      "@employees/*": ["src/app/features/employees/*"],
+      "@logs/*": ["src/app/features/logs/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

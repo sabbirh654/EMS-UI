@@ -1,38 +1,52 @@
-import { Component, OnInit } from '@angular/core';
-import { EmployeeService } from '../../services/employee.service';
-import { EmployeeDetails } from '../../models/employee.model';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule, DatePipe } from '@angular/common';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
-import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { AttendanceFormComponent } from '../../../attendances/components/attendance-form/attendance-form.component';
-import { AttendanceListComponent } from '../../../attendances/components/attendance-list/attendance-list.component';
 import { MatSelectModule } from '@angular/material/select';
-import { AttendanceService } from '../../../attendances/services/attendance.service';
-import { AttendanceDetailsComponent } from '../../../attendances/components/attendance-details/attendance-details.component';
-import { AttendanceDetails } from '../../../attendances/models/attendance.model';
-import { OperationLogService } from '../../../logs/services/operation-log.service';
-import { LogFilter, OperationLog } from '../../../logs/models/log.model';
-import { EntityName } from '../../../../shared/Enums/enums';
-import { LogDetailsComponent } from '../../../logs/components/log-details/log-details.component';
-import * as XLSX from 'xlsx';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+import { AttendanceDetailsComponent } from '@attendances/components/attendance-details/attendance-details.component';
+import { AttendanceFormComponent } from '@attendances/components/attendance-form/attendance-form.component';
+import { AttendanceDetails } from '@attendances/models/attendance.model';
+import { AttendanceService } from '@attendances/services/attendance.service';
+import { EmployeeFormComponent } from '@employees/components/employee-form/employee-form.component';
+import { EmployeeDetails } from '@employees/models/employee.model';
+import { EmployeeService } from '@employees/services/employee.service';
+import { LogDetailsComponent } from '@logs/components/log-details/log-details.component';
+import { LogFilter, OperationLog } from '@logs/models/log.model';
+import { OperationLogService } from '@logs/services/operation-log.service';
+import { ConfirmDeleteDialogComponent } from '@shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { CommonService } from '@shared/services/common.service';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatSnackBarModule, EmployeeFormComponent, AttendanceFormComponent,
-    MatSelectModule
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    EmployeeFormComponent,
+    AttendanceFormComponent,
+    MatSelectModule,
   ],
   providers: [DatePipe],
   templateUrl: './employee-list.component.html',
-  styleUrl: './employee-list.component.css'
+  styleUrl: './employee-list.component.css',
 })
 export class EmployeeListComponent implements OnInit {
+  displayedColumns: string[] = [
+    'id',
+    'name',
+    'email',
+    'phone',
+    'birthDate',
+    'address',
+    'department',
+    'designation',
+    'actions',
+  ];
 
-  displayedColumns: string[] = ['id', 'name', 'email', 'phone', 'birthDate', 'address', 'department', 'designation', 'actions'];
   employeeData: EmployeeDetails[] = [];
   isEmployeeFormVisible: boolean = false;
   isEditButtonClicked: boolean = false;
@@ -41,14 +55,28 @@ export class EmployeeListComponent implements OnInit {
   selectedEmployeeId: number | null = null;
   selectedEmployeeAttendance: AttendanceDetails[] | null = null;
   selectedEmployeeLogs: OperationLog[] | null = null;
+  headers: string[] = [];
 
-  constructor(private employeeService: EmployeeService,
+  constructor(
+    private employeeService: EmployeeService,
     private attendanceService: AttendanceService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private logService: OperationLogService,
-    private datePipe: DatePipe
-  ) { }
+    private datePipe: DatePipe,
+    private commonService: CommonService
+  ) {
+    this.headers = [
+      'id',
+      'name',
+      'email',
+      'phoneNumber',
+      'address',
+      'birthDate',
+      'department',
+      'designation',
+    ];
+  }
 
   ngOnInit(): void {
     this.loadEmployeeData();
@@ -68,17 +96,21 @@ export class EmployeeListComponent implements OnInit {
   onDelete(id: number): void {
     const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.employeeService.deleteEmployee(id).subscribe({
           next: () => {
-            this.snackBar.open('Employee deleted successfully', 'Close', { duration: 2000 });
-            this.loadEmployeeData();  // Refresh data after deletion
+            this.snackBar.open('Employee deleted successfully', 'Close', {
+              duration: 2000,
+            });
+            this.loadEmployeeData(); // Refresh data after deletion
           },
           error: (err) => {
             console.error('Error deleting employee', err);
-            this.snackBar.open('Failed to delete employee', 'Close', { duration: 2000 });
-          }
+            this.snackBar.open('Failed to delete employee', 'Close', {
+              duration: 2000,
+            });
+          },
         });
       }
     });
@@ -133,11 +165,10 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onViewLogs(id: number) {
-
     var filter: LogFilter = {
       id: id,
-      entityName: "Employee"
-    }
+      entityName: 'Employee',
+    };
     this.logService.getLogs(filter).subscribe({
       next: (d) => {
         this.selectedEmployeeLogs = d.result || null;
@@ -148,62 +179,38 @@ export class EmployeeListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching employee log data', err);
-        console.log(filter)
+        console.log(filter);
       },
     });
   }
 
   onDownloadAsCsv() {
-    console.log(this.employeeData)
-    const headers = ['ID', 'Name', 'Email', 'Phone', 'Address', 'DOB', 'Department', 'Designation'];
-
-    // Create the header row
-    const headerRow = headers.join(',');
-    const rows = this.employeeData.map(employee => `${employee.id},${employee.name},${employee.email},${employee.phoneNumber},${employee.address}, ${employee.birthDate}, ${employee.department},${employee.designation}`).join('\n');
-    const csvContent = headers + '\n' + rows;
-
+    const csvContent = this.commonService.createCsvContent(
+      this.headers,
+      this.employeeData
+    );
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-
-    const link = document.createElement('a');
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'employees.csv');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    this.commonService.downloadFile(blob, 'employees.csv');
   }
 
   onDownloadAsXls() {
-    const headers = ['ID', 'Name', 'Email', 'Phone', 'Address', 'DOB', 'Department', 'Designation'];
+    this.commonService.exportToExcel(
+      this.headers,
+      this.transformEmployeeDataForExport(this.employeeData),
+      'employees.xlsx'
+    );
+  }
 
-    // Map the employee data into a 2D array
-    const excelData = this.employeeData.map(employee => [
+  private transformEmployeeDataForExport(data: EmployeeDetails[]): any[][] {
+    return data.map((employee) => [
       employee.id,
-      employee.name || '',  // Replace null/undefined with an empty string
+      employee.name || '',
       employee.email || '',
       employee.phoneNumber || '',
       employee.address || '',
       this.datePipe.transform(employee.birthDate, 'yyyy-MM-dd') || '',
       employee.department || '',
-      employee.designation || ''
+      employee.designation || '',
     ]);
-
-    const sheetData = [headers, ...excelData];
-
-    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-    const columnWidths = headers.map((header, columnIndex) => {
-      const maxContentLength = Math.max(
-        header.length,
-        ...excelData.map(row => String(row[columnIndex]).length)
-      );
-      return { wch: maxContentLength + 2 }; // Add padding to the width
-    });
-
-    worksheet['!cols'] = columnWidths;
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Employees');
-    XLSX.writeFile(workbook, 'employees.xlsx');
   }
 }
