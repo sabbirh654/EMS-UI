@@ -1,9 +1,10 @@
 <h2 mat-dialog-title class="dialog-title">Attendance Details</h2>
 <div mat-dialog-content class="dialog-content">
-    <div *ngFor="let attendance of data">
+    <div *ngFor="let attendance of data.attendance">
         <div class="list-content">
-            <div class="date-detail">
-                <span>{{ attendance.attendanceDate | date: 'dd MMM yyyy'}}</span>
+            <div class="detail">
+                <strong>Date:</strong>
+                <span>{{ attendance.attendanceDate | date: 'yyyy-MM-dd'}}</span>
             </div>
             <div class="detail">
                 <strong>Check In:</strong>
@@ -12,6 +13,29 @@
             <div class="detail">
                 <strong>Check Out:</strong>
                 <span>{{ attendance.latestCheckOut | timeAmPm }}</span>
+            </div>
+            <div>
+                <button mat-raised-button color="primary"
+                    (click)="onViewAttendanceDetails(data.employeeId, attendance.attendanceDate)">
+                    {{ attendanceViewState[data.employeeId + '-' + (attendance.attendanceDate | date: 'yyyy-MM-dd')] ?
+                    'Hide Details' : 'View Details' }}
+                </button>
+            </div>
+            <div class="full-details" style="border: 2px solid rgb(216, 210, 210); margin-top: 8px; padding: 8px;"
+                *ngIf="attendanceViewState[data.employeeId + '-' + (attendance.attendanceDate | date: 'yyyy-MM-dd')]">
+                <h4 class="dialog-title">In out Details</h4>
+                <div *ngFor="let detail of selectedEmployeeCheckInOutList">
+                    <div>
+                        <div class="detail">
+                            <strong>Check In:</strong>
+                            <span>{{ detail.checkInTime | timeAmPm }}</span>
+                        </div>
+                        <div class="detail" style="margin-bottom: 16px;">
+                            <strong>Check Out:</strong>
+                            <span>{{ detail.checkOutTime | timeAmPm }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

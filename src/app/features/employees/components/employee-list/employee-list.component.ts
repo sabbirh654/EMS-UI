@@ -155,7 +155,10 @@ export class EmployeeListComponent implements OnInit {
         this.dialog.open(AttendanceDetailsComponent, {
           width: '600px',
 
-          data: this.selectedEmployeeAttendance,
+          data: {
+            attendance: this.selectedEmployeeAttendance,
+            employeeId: id
+          }
         });
       },
       error: (err) => {
