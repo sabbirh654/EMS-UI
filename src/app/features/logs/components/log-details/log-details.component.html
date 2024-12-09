@@ -1,6 +1,6 @@
 <mat-dialog-content>
     <h2>Operation Logs</h2>
-    <mat-table [dataSource]="data" class="mat-elevation-z8">
+    <mat-table [dataSource]="data" class="mat-elevation-z8" fixedLayout="true">
 
         <!-- Operation Type Column -->
         <ng-container matColumnDef="operationType">
@@ -18,6 +18,11 @@
         <ng-container matColumnDef="time">
             <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
             <mat-cell *matCellDef="let log"> {{ log.time }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="details">
+            <mat-header-cell *matHeaderCellDef> Details </mat-header-cell>
+            <mat-cell *matCellDef="let log"> {{ log.details }} </mat-cell>
         </ng-container>
 
         <!-- Header and Rows -->

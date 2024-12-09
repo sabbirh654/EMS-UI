@@ -1,20 +1,26 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatCardModule } from '@angular/material/card';
-import { NgFor, NgIf } from '@angular/common';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { Department } from '../../../departments/models/department.model';
+import { DepartmentService } from '../../../departments/services/department.service';
+import { Designation } from '../../../designations/models/designation.model';
+import { DesignationService } from '../../../designations/services/designation.service';
 import { EmployeeAddMapper, EmployeeUpdateMapper } from '../../employee.mapper';
 import { EmployeeService } from '../../services/employee.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { DesignationService } from '../../../designations/services/designation.service';
-import { Designation } from '../../../designations/models/designation.model';
-import { DepartmentService } from '../../../departments/services/department.service';
-import { Department } from '../../../departments/models/department.model';
 
 @Component({
   selector: 'app-employee-form',
@@ -28,11 +34,11 @@ import { Department } from '../../../departments/models/department.model';
     MatCardModule,
     MatSnackBarModule,
     NgIf,
-    NgFor
+    NgFor,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './employee-form.component.html',
-  styleUrl: './employee-form.component.css'
+  styleUrl: './employee-form.component.css',
 })
 export class EmployeeFormComponent implements OnInit {
   @Input() mode: 'add' | 'edit' = 'add';
@@ -45,11 +51,12 @@ export class EmployeeFormComponent implements OnInit {
   departments: Department[] | null = null;
   designations: Designation[] | null = null;
 
-  constructor(private employeeService: EmployeeService,
+  constructor(
+    private employeeService: EmployeeService,
     private designationService: DesignationService,
     private departmentService: DepartmentService,
-    private snackBar: MatSnackBar) {
-  }
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     //Get designations from db
@@ -82,7 +89,7 @@ export class EmployeeFormComponent implements OnInit {
       email: this.employeeData.email,
       phone: this.employeeData.phoneNumber,
       address: this.employeeData.address,
-      date: this.employeeData.birthDate
+      date: this.employeeData.birthDate,
     });
 
     this.employeeForm.get('id')?.disable();
@@ -92,28 +99,37 @@ export class EmployeeFormComponent implements OnInit {
     if (this.employeeForm.valid) {
       if (this.mode === 'edit') {
         let employeeUpdateDto = EmployeeUpdateMapper(this.employeeForm.value);
-        this.employeeService.updateEmployee(this.employeeForm.get('id')?.value, employeeUpdateDto).subscribe({
-          next: () => {
-            this.snackBar.open('Employee updated successfully', 'Close', { duration: 2000 });
-            this.successfulAddUpdateEmployeeEvent.emit();
-          },
-          error: (err) => {
-            console.error('Error updating employee', err);
-            this.snackBar.open('Failed to update employee', 'Close', { duration: 2000 });
-          }
-        });
-      }
-      else {
+        this.employeeService
+          .updateEmployee(this.employeeForm.get('id')?.value, employeeUpdateDto)
+          .subscribe({
+            next: () => {
+              this.snackBar.open('Employee updated successfully', 'Close', {
+                duration: 2000,
+              });
+              this.successfulAddUpdateEmployeeEvent.emit();
+            },
+            error: (err) => {
+              console.error('Error updating employee', err);
+              this.snackBar.open('Failed to update employee', 'Close', {
+                duration: 2000,
+              });
+            },
+          });
+      } else {
         let employeeAddDto = EmployeeAddMapper(this.employeeForm.value);
         this.employeeService.addEmployee(employeeAddDto).subscribe({
           next: () => {
-            this.snackBar.open('Employee added successfully', 'Close', { duration: 2000 });
+            this.snackBar.open('Employee added successfully', 'Close', {
+              duration: 2000,
+            });
             this.successfulAddUpdateEmployeeEvent.emit();
           },
           error: (err) => {
             console.error('Error adding employee', err);
-            this.snackBar.open('Failed to add employee', 'Close', { duration: 2000 });
-          }
+            this.snackBar.open('Failed to add employee', 'Close', {
+              duration: 2000,
+            });
+          },
         });
       }
       console.log('Form submitted:', this.employeeForm.value);

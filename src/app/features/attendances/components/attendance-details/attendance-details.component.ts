@@ -1,15 +1,12 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import {
-  Attendance,
-  AttendanceDetails,
-  AttendanceFilter,
-} from '../../models/attendance.model';
-import { TimeAmPmPipe } from '../../../../shared/pipes/date.pipe';
-import { AttendanceService } from '../../services/attendance.service';
 import { MatCardModule } from '@angular/material/card';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+
+import { TimeAmPmPipe } from '../../../../shared/pipes/date.pipe';
+import { Attendance, AttendanceFilter } from '../../models/attendance.model';
+import { AttendanceService } from '../../services/attendance.service';
 
 @Component({
   selector: 'app-attendance-details',

@@ -1,26 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+
+import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
 import { Department } from '../../models/department.model';
 import { DepartmentService } from '../../services/department.service';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
 import { DepartmentFormComponent } from '../department-form/department-form.component';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDeleteDialogComponent } from '../../../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-department-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatTableModule, DepartmentFormComponent, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatTableModule,
+    DepartmentFormComponent,
+    MatSnackBarModule,
+  ],
   templateUrl: './department-list.component.html',
-  styleUrl: './department-list.component.css'
+  styleUrl: './department-list.component.css',
 })
 export class DepartmentListComponent implements OnInit {
   constructor(
     private departmentService: DepartmentService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog
+  ) {}
 
   departments: Department[] = [];
   displayedColumns: string[] = ['id', 'name', 'actions'];
@@ -40,17 +48,21 @@ export class DepartmentListComponent implements OnInit {
   onDelete(id: number) {
     const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.departmentService.deleteDepartment(id).subscribe({
           next: () => {
-            this.snackBar.open('Department deleted successfully', 'Close', { duration: 2000 });
-            this.loadData();  // Refresh data after deletion
+            this.snackBar.open('Department deleted successfully', 'Close', {
+              duration: 2000,
+            });
+            this.loadData(); // Refresh data after deletion
           },
           error: (err) => {
             console.error('Error deleting department', err);
-            this.snackBar.open('Failed to delete department', 'Close', { duration: 2000 });
-          }
+            this.snackBar.open('Failed to delete department', 'Close', {
+              duration: 2000,
+            });
+          },
         });
       }
     });

@@ -9,7 +9,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, MatGridListModule],
   templateUrl: './employee-details.component.html',
-  styleUrl: './employee-details.component.css'
+  styleUrl: './employee-details.component.css',
 })
 export class EmployeeDetailsComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {

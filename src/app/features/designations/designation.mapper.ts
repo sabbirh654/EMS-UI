@@ -1,7 +1,9 @@
-import { AddUpdateDesignationDto } from "./models/designation.model";
+import { AddUpdateDesignationDto } from './models/designation.model';
 
-export function DesignationAddUpdateMapper(designation: any): AddUpdateDesignationDto {
-    return {
-        name: designation.name,
-    }
+export function DesignationAddUpdateMapper(
+  designation: any
+): AddUpdateDesignationDto {
+  return {
+    name: designation.name,
+  };
 }

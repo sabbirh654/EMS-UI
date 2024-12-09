@@ -1,8 +1,8 @@
 export interface Department {
-    id: number,
-    name: string
+  id: number;
+  name: string;
 }
 
 export interface AddUpdateDepartmentDto {
-    name: string
+  name: string;
 }

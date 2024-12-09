@@ -157,8 +157,8 @@ export class EmployeeListComponent implements OnInit {
 
           data: {
             attendance: this.selectedEmployeeAttendance,
-            employeeId: id
-          }
+            employeeId: id,
+          },
         });
       },
       error: (err) => {
@@ -176,7 +176,8 @@ export class EmployeeListComponent implements OnInit {
       next: (d) => {
         this.selectedEmployeeLogs = d.result || null;
         this.dialog.open(LogDetailsComponent, {
-          width: '600px',
+          width: '800px',
+          maxWidth: 'none',
           data: this.selectedEmployeeLogs,
         });
       },

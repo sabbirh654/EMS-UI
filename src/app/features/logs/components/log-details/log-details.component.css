@@ -1,0 +1,15 @@
+.mat-column-details {
+    width: 50%;
+    /* Adjust to make the Details column larger */
+    white-space: normal;
+    /* Allow text wrapping */
+    word-break: break-word;
+    /* Handle long words properly */
+}
+
+.mat-column-operationType,
+.mat-column-date,
+.mat-column-time {
+    width: 16%;
+    /* Share the remaining space among these columns */
+}
