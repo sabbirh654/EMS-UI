@@ -1,6 +1,7 @@
 export interface ApiResponse<T> {
-  success: boolean;
+  isSuccess: boolean;
   errorCode: string | null;
-  message: string | null;
+  errorMessage: string | null;
+  errors: string[];
   result: T | null;
 }

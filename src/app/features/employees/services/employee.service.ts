@@ -45,4 +45,16 @@ export class EmployeeService {
   addEmployee(employeeAddDto: EmployeeAddDto): Observable<ApiResponse<number>> {
     return this.http.post<ApiResponse<number>>(this.apiUrl, employeeAddDto);
   }
+
+  downloadEmployeeListXlsx(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/download-xlsx`, {
+      responseType: 'blob',
+    });
+  }
+
+  downloadEmployeeListCsv(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/download-csv`, {
+      responseType: 'blob',
+    });
+  }
 }

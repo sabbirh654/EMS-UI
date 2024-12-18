@@ -95,13 +95,13 @@ export class AttendanceFormComponent implements OnInit {
           .updateAttendance(this.selectedAttendanceData?.id!, dto)
           .subscribe({
             next: (data) => {
-              if (data.success == true) {
+              if (data.isSuccess == true) {
                 this.snackBar.open('Attendance updated successfully', 'Close', {
                   duration: 2000,
                 });
                 this.successfulAddUpdateAttendanceEvent.emit();
               } else {
-                this.snackBar.open(data.message ?? '', 'Close', {
+                this.snackBar.open(data.errorMessage ?? '', 'Close', {
                   duration: 4000,
                 });
               }
@@ -117,20 +117,20 @@ export class AttendanceFormComponent implements OnInit {
         let dto = AttendanceAddMapper(this.attendanceForm.value);
         this.attendanceService.addAttendance(dto).subscribe({
           next: (data) => {
-            if (data.success == true) {
+            if (data.isSuccess == true) {
               this.snackBar.open('Attendance added successfully', 'Close', {
                 duration: 2000,
               });
               this.successfulAddUpdateAttendanceEvent.emit();
             } else {
-              this.snackBar.open(data.message ?? '', 'Close', {
+              this.snackBar.open(data.errorMessage ?? '', 'Close', {
                 duration: 4000,
               });
             }
           },
           error: (err) => {
             console.error('Error adding adding', err);
-            this.snackBar.open('Failed to add attendance', 'Close', {
+            this.snackBar.open(err.error.errorMessage, 'Close', {
               duration: 2000,
             });
           },

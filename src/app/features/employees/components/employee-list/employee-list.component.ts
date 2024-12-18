@@ -16,7 +16,6 @@ import { LogDetailsComponent } from '@logs/components/log-details/log-details.co
 import { LogFilter, OperationLog } from '@logs/models/log.model';
 import { OperationLogService } from '@logs/services/operation-log.service';
 import { ConfirmDeleteDialogComponent } from '@shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
-import { CommonService } from '@shared/services/common.service';
 
 @Component({
   selector: 'app-employee-list',
@@ -63,8 +62,7 @@ export class EmployeeListComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private logService: OperationLogService,
-    private datePipe: DatePipe,
-    private commonService: CommonService
+    private datePipe: DatePipe
   ) {
     this.headers = [
       'id',
@@ -189,32 +187,34 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onDownloadAsCsv() {
-    const csvContent = this.commonService.createCsvContent(
-      this.headers,
-      this.employeeData
-    );
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    this.commonService.downloadFile(blob, 'employees.csv');
+    this.employeeService.downloadEmployeeListCsv().subscribe({
+      next: (data) => {
+        const url = window.URL.createObjectURL(data);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'EmployeeList.csv';
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error fetching employee log data', err);
+      },
+    });
   }
 
   onDownloadAsXls() {
-    this.commonService.exportToExcel(
-      this.headers,
-      this.transformEmployeeDataForExport(this.employeeData),
-      'employees.xlsx'
-    );
-  }
-
-  private transformEmployeeDataForExport(data: EmployeeDetails[]): any[][] {
-    return data.map((employee) => [
-      employee.id,
-      employee.name || '',
-      employee.email || '',
-      employee.phoneNumber || '',
-      employee.address || '',
-      this.datePipe.transform(employee.birthDate, 'yyyy-MM-dd') || '',
-      employee.department || '',
-      employee.designation || '',
-    ]);
+    this.employeeService.downloadEmployeeListXlsx().subscribe({
+      next: (data) => {
+        const url = window.URL.createObjectURL(data);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'EmployeeList.xlsx';
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error fetching employee log data', err);
+      },
+    });
   }
 }

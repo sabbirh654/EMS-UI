@@ -20,9 +20,11 @@
 @else() {
 <div class="header">
     <h2>Employee List</h2>
-    <button mat-raised-button color="primary" (click)="onAdd()">Add</button>
-    <button mat-raised-button color="primary" (click)="onDownloadAsCsv()">Donwload as CSV</button>
-    <button mat-raised-button color="primary" (click)="onDownloadAsXls()">Donwload as Xls</button>
+    <div class="button-group">
+        <button mat-raised-button color="primary" (click)="onAdd()">Add Employee</button>
+        <button mat-raised-button color="primary" (click)="onDownloadAsCsv()">Donwload as csv</button>
+        <button mat-raised-button color="primary" (click)="onDownloadAsXls()">Donwload as xlsx</button>
+    </div>
 </div>
 <div class="table-container" style="margin: 20px;">
     <table mat-table [dataSource]=" employeeData" class="mat-elevation-z8">
