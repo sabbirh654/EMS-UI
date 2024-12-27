@@ -3,27 +3,41 @@ import { EmployeeListComponent } from './features/employees/components/employee-
 import { DepartmentListComponent } from './features/departments/components/department-list/department-list.component';
 import { DesignationListComponent } from './features/designations/components/designation-list/designation-list.component';
 import { AttendanceListComponent } from './features/attendances/components/attendance-list/attendance-list.component';
+import { LoginComponent } from './features/authentication/components/login/login.component';
+import { AuthGuard } from './features/authentication/guards/auth.guard';
+import { RegisterComponent } from './features/authentication/components/register/register.component';
 
 export const routes: Routes = [
     {
         path: 'employees',
-        component: EmployeeListComponent
+        component: EmployeeListComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'departments',
-        component: DepartmentListComponent
+        component: DepartmentListComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'designations',
-        component: DesignationListComponent
+        component: DesignationListComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'attendances',
-        component: AttendanceListComponent
+        component: AttendanceListComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: '',
-        redirectTo: '/employees',
-        pathMatch: 'full'
+        component: LoginComponent,
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'register',
+        component: RegisterComponent
     }
 ];

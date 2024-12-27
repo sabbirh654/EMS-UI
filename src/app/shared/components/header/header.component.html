@@ -1,8 +1,13 @@
 <header>
-    <nav>
+    <nav *ngIf="isLoggedIn | async">
         <a routerLink="/employees" routerLinkActive="active-link">Employees</a>
         <a routerLink="/departments" routerLinkActive="active-link">Departments</a>
         <a routerLink="/designations" routerLinkActive="active-link">Designations</a>
         <a routerLink="/attendances" routerLinkActive="active-link">Attendances</a>
+        <button *ngIf="(isLoggedIn | async)" (click)="onLogout()">Logout</button>
+    </nav>
+    <nav *ngIf="!(isLoggedIn | async)">
+        <a *ngIf="!(isLoggedIn | async)" routerLink="/login">Login</a>
+        <a *ngIf="!(isLoggedIn | async)" routerLink="/register">Register</a>
     </nav>
 </header>
