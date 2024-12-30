@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginDto, RegisterDto, Tokens } from '../models/auth.model';
+import { LoginDto, RefreshTokenDto, RegisterDto, Tokens } from '../models/auth.model';
 import { ApiResponse } from '@shared/models/response.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ export class AuthService {
     return this.http.post<ApiResponse<number>>(`${this.apiUrl}/register`, credentials);
   }
 
-  refresh(refreshToken: string): Observable<ApiResponse<Tokens>> {
+  refresh(refreshToken: RefreshTokenDto): Observable<ApiResponse<Tokens>> {
     return this.http.post<ApiResponse<Tokens>>(`${this.apiUrl}/refresh`, refreshToken);
   }
 

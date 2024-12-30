@@ -31,9 +31,13 @@ export class AuthInterceptor implements HttpInterceptor {
 
     private handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let refreshToken = this.authService.getRefreshToken();
-        return this.authService.refresh(refreshToken!).pipe(
+        return this.authService.refresh({ refreshToken: refreshToken! }).pipe(
             switchMap((response) => {
                 // Update tokens in the AuthService
+                if (!response.isSuccess) {
+                    this.authService.logout();
+                    this.router.navigate(['/login']);
+                }
                 this.authService.setSession(response.result?.token!, response.result?.refreshToken!);
 
                 // Retry the failed request with the new access token
@@ -41,6 +45,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     headers: req.headers.set('Authorization', `Bearer ${response.result?.token}`)
                 });
                 return next.handle(newRequest);
+
             }),
             catchError((refreshError) => {
                 // If refresh fails, log out and redirect to login
